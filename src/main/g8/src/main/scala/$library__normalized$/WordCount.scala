@@ -7,7 +7,6 @@ package $organization$.$name$
 import org.apache.spark.rdd._
 
 object WordCount {
-
   /**
    * A slightly more complex than normal wordcount example with optional
    * separators and stopWords. Splits on the provided separators, removes
