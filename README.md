@@ -10,7 +10,15 @@ To encourage good software development practice, this starts with a project at 1
 
 ## Using
 
-Coming soon!
+Have g8 installed? You can run it with:
+```bash
+g8  holdenk/sparkProjectTemplate --name=projectname --organization=com.my.org --sparkVersion=2.1.1
+```
+
+Using sbt (0.13.13+)? just do
+```bash
+sbt new holdenk/sparkProjectTemplate
+```
 
 ## Related
 
