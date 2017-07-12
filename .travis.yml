@@ -16,3 +16,8 @@ script:
   # Tricks to avoid unnecessary cache updates
   - find $HOME/.sbt -name "*.lock" | xargs rm
   - find $HOME/.ivy2 -name "ivydata-*.properties" | xargs rm
+scala:
+  - 2.11.8
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
+sudo: false
