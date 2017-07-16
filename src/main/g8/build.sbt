@@ -3,13 +3,12 @@ lazy val root = (project in file(".")).
   settings(
     inThisBuild(List(
       organization := "$organization$",
-      scalaVersion := "2.11.8"
+      scalaVersion := "2.11.11"
     )),
     name := "$name$",
     version := "0.0.1",
     sparkVersion := "$sparkVersion$",
     javacOptions ++= Seq("-source", "1.8", "-target", "1.8"),
-    coverageHighlighting := true,
     sparkComponents := Seq("core", "sql", "catalyst", "mllib"),
     parallelExecution in Test := false,
     fork := true,
@@ -17,9 +16,9 @@ lazy val root = (project in file(".")).
     javaOptions ++= Seq("-Xms512M", "-Xmx2048M", "-XX:MaxPermSize=2048M", "-XX:+CMSClassUnloadingEnabled"),
     libraryDependencies ++= Seq(
       // Test your code PLEASE!!!
-      "org.scalatest" %% "scalatest" % "3.0.1",
-      "org.scalacheck" %% "scalacheck" % "1.13.4",
-      "com.holdenkarau" %% "spark-testing-base" % "$sparkVersion$_$sparkTestingbaseRelease$"),
+      "org.scalatest" %% "scalatest" % "3.0.1" % "test",
+      "org.scalacheck" %% "scalacheck" % "1.13.4" % "test",
+      "com.holdenkarau" %% "spark-testing-base" % "$sparkVersion$_$sparkTestingbaseRelease$") % "test",
    scalacOptions ++= Seq("-deprecation", "-unchecked"),
     pomIncludeRepository := { x => false },
     resolvers ++= Seq(
