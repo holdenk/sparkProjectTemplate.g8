@@ -8,17 +8,53 @@ This template will bootstrap a new spark project with everyone's "favourite" wor
 
 To encourage good software development practice, this starts with a project at 100% code coverage (e.g. one test :p), while its expected for this to decrease, we hope you use the provided [spark-testing-base][stb] library or similar option.
 
-## Using
+## Creating a new project from this template
 
 Have g8 installed? You can run it with:
+
 ```bash
-g8  holdenk/sparkProjectTemplate --name=projectname --organization=com.my.org --sparkVersion=2.2.0
+g8 holdenk/sparkProjectTemplate --name=projectname --organization=com.my.org --sparkVersion=2.2.0
 ```
 
 Using sbt (0.13.13+)? just do
+
 ```bash
-sbt new holdenk/sparkProjectTemplate
+sbt new holdenk/sparkProjectTemplate.g8
 ```
+
+## Executing the created project
+
+First go to the project you created: 
+
+```bash
+cd projectname
+```
+
+You can test locally the example spark job included in this template directly from sbt: 
+
+```bash 
+sbt "run inputFile.txt outputFile.txt"
+```
+
+then choose `CountingLocalApp` when prompted.
+
+You can also assemble a fat jar (see [sbt-assembly](https://github.com/sbt/sbt-assembly) for configuration details): 
+
+```bash
+sbt assembly
+```
+
+then [submit as usual](https://spark.apache.org/docs/latest/submitting-applications.html) to your spark cluster :
+
+```bash
+/path/to/spark-home/bin/spark-submit \
+  --class <package-name>.CountingApp \
+  --name the_awesome_app \
+  --master <master url> \
+  ./target/scala-2.11/<jar name> \
+  <input file> <output file>
+```
+
 
 ## Related
 
