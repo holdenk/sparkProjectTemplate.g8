@@ -15,7 +15,7 @@ Have g8 installed? You can run it with:
 g8  holdenk/sparkProjectTemplate --name=projectname --organization=com.my.org --sparkVersion=2.2.0
 ```
 
-Using sbt (0.13.13+)? just do
+Using sbt (0.13.13+) just do
 ```bash
 sbt new holdenk/sparkProjectTemplate.g8
 ```
