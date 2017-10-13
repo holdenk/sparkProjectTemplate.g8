@@ -17,7 +17,7 @@ g8  holdenk/sparkProjectTemplate --name=projectname --organization=com.my.org --
 
 Using sbt (0.13.13+)? just do
 ```bash
-sbt new holdenk/sparkProjectTemplate
+sbt new holdenk/sparkProjectTemplate.g8
 ```
 
 ## Related
