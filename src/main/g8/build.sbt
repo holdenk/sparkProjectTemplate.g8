@@ -1,3 +1,17 @@
+
+mainClass in (Compile, run) := Some("$organization$.$name$.WordCount")
+
+test in assembly := {}
+
+assemblyOption in assembly := (assemblyOption in assembly).value.copy(includeScala = false)
+
+assemblyMergeStrategy in assembly := {
+  case PathList("META-INF", "MANIFEST.MF") => MergeStrategy.discard
+  case x => MergeStrategy.first
+}
+
+
+
 // give the user a nice default project!
 lazy val root = (project in file(".")).
   settings(
