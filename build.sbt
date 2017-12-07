@@ -2,6 +2,19 @@
 // To test the template run `g8` or `g8Test` from the sbt session.
 // See http://www.foundweekends.org/giter8/testing.html#Using+the+Giter8Plugin for more details.
 
+mainClass in (Compile, run) := Some("$package__packaged$/WordCount")
+
+test in assembly := {}
+
+assemblyOption in assembly := (assemblyOption in assembly).value.copy(includeScala = false)
+
+assemblyMergeStrategy in assembly := {
+  case PathList("META-INF", "MANIFEST.MF") => MergeStrategy.discard
+  case x => MergeStrategy.first
+}
+
+
+
 lazy val root = (project in file(".")).
   settings(
     name := "sparkProjectTemplate",

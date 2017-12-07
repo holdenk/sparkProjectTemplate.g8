@@ -9,7 +9,7 @@ lazy val root = (project in file(".")).
     version := "0.0.1",
     sparkVersion := "$sparkVersion$",
     javacOptions ++= Seq("-source", "1.8", "-target", "1.8"),
-    sparkComponents := Seq("core", "sql", "catalyst", "mllib"),
+    sparkComponents := Seq("core", "sql", "catalyst", "mllib", "hive", "streaming-kinesis-asl"),
     parallelExecution in Test := false,
     fork := true,
     coverageHighlighting := true,
@@ -18,7 +18,14 @@ lazy val root = (project in file(".")).
       // Test your code PLEASE!!!
       "org.scalatest" %% "scalatest" % "3.0.1" % "test",
       "org.scalacheck" %% "scalacheck" % "1.13.4" % "test",
-      "com.holdenkarau" %% "spark-testing-base" % "$sparkVersion$_$sparkTestingbaseRelease$" % "test"),
+      "org.apache.hadoop" % "hadoop-aws"    % "2.7.3",
+      "com.holdenkarau" %% "spark-testing-base" % "$sparkVersion$_$sparkTestingbaseRelease$" % "test").map(_.
+excludeAll(
+    ExclusionRule(organization = "commons-code"),
+    ExclusionRule(organization = "joda-time"),
+    ExclusionRule(organization = "commons-beanutils"),
+    ExclusionRule(organization = "mime-types")
+)),
     scalacOptions ++= Seq("-deprecation", "-unchecked"),
     pomIncludeRepository := { x => false },
     resolvers ++= Seq(
@@ -36,3 +43,7 @@ lazy val root = (project in file(".")).
         Some("releases"  at nexus + "service/local/staging/deploy/maven2")
     }
   )
+
+lazy val intellijRunner = project.in(file("intellijRunner")).dependsOn(RootProject(file("."))).settings(
+  spIgnoreProvided := false
+).disablePlugins(sbtassembly.AssemblyPlugin)
