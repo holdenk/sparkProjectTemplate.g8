@@ -18,7 +18,7 @@ class KinesisExampleTest extends FunSuite with SharedSparkContext {
       "Panda is the most happy panda in all the#!?ing land!").toDS
     val stopWords: Set[String] = Set("a", "the", "in", "was", "there", "she", "he")
     val splitTokens: Array[Char] = "#%?!. ".toCharArray
-    val actualResultDs = WordCount.withStopWordsFiltered(linesDs, splitTokens, stopWords)
+    val actualResultDs = KinesisExample.withStopWordsFiltered(linesDs, splitTokens, stopWords)
     val actualResultMap = actualResultDs.collectAsMap()
     assert(!actualResultMap.contains("the"))
     assert(!actualResultMap.contains("?"))
