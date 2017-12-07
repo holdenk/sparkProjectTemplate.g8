@@ -5,7 +5,7 @@ package $organization$.$name$
  */
 import org.apache.spark.sql.Dataset
 
-object KinesisExample {
+object KinesisExample extends App {
   /**
    * A slightly more complex than normal wordcount example with optional
    * separators and stopWords. Splits on the provided separators, removes
