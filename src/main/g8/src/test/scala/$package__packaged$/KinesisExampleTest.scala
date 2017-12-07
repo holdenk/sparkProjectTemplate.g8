@@ -8,7 +8,7 @@ import com.holdenkarau.spark.testing.SharedSparkContext
 import org.apache.spark.sql.SQLContext
 import org.scalatest.FunSuite
 
-class WordCountTest extends FunSuite with SharedSparkContext {
+class KinesisExampleTest extends FunSuite with SharedSparkContext {
   test("countWords should  produce expected behaviours"){
     val spark =new SQLContext(sc).sparkSession
     import spark.implicits._
