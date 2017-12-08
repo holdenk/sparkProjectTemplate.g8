@@ -73,12 +73,12 @@ lazy val root = (project in file(".")).
         Some("releases"  at nexus + "service/local/staging/deploy/maven2")
     })
 // https://github.com/JetBrains/intellij-scala/wiki/%5BSBT%5D-How-to-use-provided-libraries-in-run-configurations
-lazy val intellijRunner = project.in(file(".")).settings(
+/*lazy val intellijRunner = project.in(file(".")).settings(
   spIgnoreProvided := true,
   name := "intellijRunner",
  commonSettings,
  libraryDependencies ++=  (sparkComponentReqs.map { component =>
             "org.apache.spark" %% s"spark-$component" % sparkVersion.value
 }.toSeq)
-)
+)*/
   //.disablePlugins(sbtassembly.AssemblyPlugin)
