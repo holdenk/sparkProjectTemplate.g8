@@ -6,7 +6,6 @@ version := "$version$"
 
 sparkVersion := "$sparkVersion$"
 
-connectorVersion := "2.0.2"
 
 assemblyOption in assembly := (assemblyOption in assembly).value.copy(includeScala = false)
 
@@ -35,21 +34,20 @@ lazy val otherDependencies = Seq(
   "org.scalaj"        %% "scalaj-http"          % "2.3.0" ,
   "org.jfarcand"      %  "wcs"                  % "1.5"
 )
-
+lazy val sparkComponentReqs =  Seq("core", "sql", "catalyst", "mllib", "hive", "streaming-kinesis-asl")
 lazy val commonSettings = Seq(
-  inThisBuild(List(
+      mainClass in (Compile, run) := Some("com.example.cmnkine.KinesisExample"),
       organization := "$organization$",
-      scalaVersion := "2.11.8"
-    )),
-    name := "$name$",
+      scalaVersion := "2.11.8",
+
     javacOptions    ++= Seq("-source", "1.8", "-target", "1.8"),
-    sparkComponents  := Seq("core", "sql", "catalyst", "mllib", "hive", "streaming-kinesis-asl"),
+
     spIgnoreProvided := false,
     parallelExecution in Test := false,
     fork := true,
     coverageHighlighting := true,
     javaOptions ++= Seq("-Xms512M", "-Xmx2048M", "-XX:MaxPermSize=2048M", "-XX:+CMSClassUnloadingEnabled"),
-    libraryDependencies ++= otherDependencies ++ testDependencies,
+
     scalacOptions ++= Seq("-deprecation", "-unchecked"),
     pomIncludeRepository := { x => false },
     resolvers ++= Seq(
@@ -62,7 +60,10 @@ lazy val commonSettings = Seq(
 // give the user a nice default project!
 lazy val root = (project in file(".")).
   settings(
+    name := "$name$",
     commonSettings,
+    sparkComponents := sparkComponentReqs,
+       libraryDependencies ++= otherDependencies ++ testDependencies,
     // publish settings
     publishTo := {
       val nexus = "https://oss.sonatype.org/"
@@ -72,7 +73,12 @@ lazy val root = (project in file(".")).
         Some("releases"  at nexus + "service/local/staging/deploy/maven2")
     })
 // https://github.com/JetBrains/intellij-scala/wiki/%5BSBT%5D-How-to-use-provided-libraries-in-run-configurations
-lazy val intellijRunner = project.in(file("intellijRunner")).dependsOn(RootProject(file("."))).settings(
+lazy val intellijRunner = project.in(file(".")).settings(
   spIgnoreProvided := true,
-  commonSettings
-).disablePlugins(sbtassembly.AssemblyPlugin)
+  name := "intellijRunner_$name$",
+ commonSettings,
+ libraryDependencies ++=  (sparkComponentReqs.map { component =>
+            "org.apache.spark" %% s"spark-$component" % sparkVersion.value
+}.toSeq)
+)
+  //.disablePlugins(sbtassembly.AssemblyPlugin)
