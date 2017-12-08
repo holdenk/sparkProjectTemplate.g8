@@ -1,4 +1,3 @@
-
 mainClass in (Compile, run) := Some("$organization$.$name$.KinesisExample")
 
 test in assembly := {}
@@ -6,6 +5,8 @@ test in assembly := {}
 version := "$version$"
 
 sparkVersion := "$sparkVersion$"
+
+connectorVersion := "2.0.2"
 
 assemblyOption in assembly := (assemblyOption in assembly).value.copy(includeScala = false)
 
@@ -16,8 +17,8 @@ assemblyMergeStrategy in assembly := {
 
 lazy val testDependencies = Seq(
       // Test your code PLEASE!!!
-      "org.scalatest"     %% "scalatest"  % "3.0.1"  % "test",
-      "org.scalacheck"    %% "scalacheck" % "1.13.4" % "test",
+      "org.scalatest"     %% "scalatest"             % "3.0.1"       % "test",
+      "org.scalacheck"    %% "scalacheck"            % "1.13.4"      % "test",
       "com.holdenkarau"   %% "spark-testing-base"    % "2.2.0_0.7.2" % "test").map(_.
 excludeAll(
     ExclusionRule(organization = "commons-code"),
@@ -27,20 +28,22 @@ excludeAll(
 ))
 
 lazy val otherDependencies = Seq(
-  "com.amazonaws" % "aws-java-sdk"  % "1.7.4",
-  "com.typesafe"  % "config"        % "1.3.1",
-  "org.apache.hadoop" % "hadoop-aws"  % "2.7.3"
+  "com.amazonaws"     %  "aws-java-sdk"         % "1.7.4" ,
+  "com.typesafe"      %  "config"               % "1.3.1" ,
+  "org.apache.hadoop" %  "hadoop-aws"           % "2.7.3" ,
+  "mysql"             %  "mysql-connector-java" % "5.1.12",
+  "org.scalaj"        %% "scalaj-http"          % "2.3.0" ,
+  "org.jfarcand"      %  "wcs"                  % "1.5"
 )
-// give the user a nice default project!
-lazy val root = (project in file(".")).
-  settings(
-    inThisBuild(List(
+
+lazy val commonSettings = Seq(
+  inThisBuild(List(
       organization := "$organization$",
       scalaVersion := "2.11.8"
     )),
     name := "$name$",
-    javacOptions ++= Seq("-source", "1.8", "-target", "1.8"),
-    sparkComponents := Seq("core", "sql", "catalyst", "mllib", "hive", "streaming-kinesis-asl"),
+    javacOptions    ++= Seq("-source", "1.8", "-target", "1.8"),
+    sparkComponents  := Seq("core", "sql", "catalyst", "mllib", "hive", "streaming-kinesis-asl"),
     spIgnoreProvided := false,
     parallelExecution in Test := false,
     fork := true,
@@ -50,11 +53,16 @@ lazy val root = (project in file(".")).
     scalacOptions ++= Seq("-deprecation", "-unchecked"),
     pomIncludeRepository := { x => false },
     resolvers ++= Seq(
-      "sonatype-releases" at "https://oss.sonatype.org/content/repositories/releases/",
-      "Typesafe repository" at "http://repo.typesafe.com/typesafe/releases/",
+      "sonatype-releases"    at "https://oss.sonatype.org/content/repositories/releases/",
+      "Typesafe repository"  at "http://repo.typesafe.com/typesafe/releases/",
       "Second Typesafe repo" at "http://repo.typesafe.com/typesafe/maven-releases/",
       Resolver.sonatypeRepo("public")
-    ),
+    )
+)
+// give the user a nice default project!
+lazy val root = (project in file(".")).
+  settings(
+    commonSettings,
     // publish settings
     publishTo := {
       val nexus = "https://oss.sonatype.org/"
@@ -63,7 +71,8 @@ lazy val root = (project in file(".")).
       else
         Some("releases"  at nexus + "service/local/staging/deploy/maven2")
     })
-
+// https://github.com/JetBrains/intellij-scala/wiki/%5BSBT%5D-How-to-use-provided-libraries-in-run-configurations
 lazy val intellijRunner = project.in(file("intellijRunner")).dependsOn(RootProject(file("."))).settings(
-  spIgnoreProvided := true
+  spIgnoreProvided := true,
+  commonSettings
 ).disablePlugins(sbtassembly.AssemblyPlugin)
