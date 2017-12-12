@@ -27,9 +27,9 @@ excludeAll(
 ))
 
 lazy val otherDependencies = Seq(
-  "com.amazonaws" % "aws-java-sdk"  % "1.7.4",
-  "com.typesafe"  % "config"        % "1.3.1",
-  "org.apache.hadoop" % "hadoop-aws"  % "2.7.3"
+  "com.amazonaws"     % "aws-java-sdk"  % "1.7.4",
+  "com.typesafe"      % "config"        % "1.3.1",
+  "org.apache.hadoop" % "hadoop-aws"    % "2.7.3"
 )
 // give the user a nice default project!
 lazy val root = (project in file(".")).
