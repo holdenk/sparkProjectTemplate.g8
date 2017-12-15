@@ -5,21 +5,23 @@ package $organization$.$name$
  */
 
 import org.apache.spark.sql.Dataset
-import com.amazonaws.regions.RegionUtils
 import com.amazonaws.auth.DefaultAWSCredentialsProviderChain
+import com.amazonaws.regions.RegionUtils
 import com.amazonaws.services.kinesis.AmazonKinesisClient
 import com.amazonaws.services.kinesis.clientlibrary.lib.worker.InitialPositionInStream
-import com.typesafe.config.ConfigBeanFactory
-import org.apache.spark.SparkConf
-import org.apache.spark.storage.StorageLevel
-import org.apache.spark.sql.SparkSession
 import com.typesafe.config.ConfigFactory
+import org.apache.spark.SparkConf
+//import org.apache.spark.SparkSession
+import org.apache.spark.storage.StorageLevel
+import org.apache.spark.streaming.dstream.DStream
 import org.apache.spark.streaming.dstream.ConstantInputDStream
 import org.apache.spark.streaming.kinesis.KinesisUtils
+import org.apache.spark.sql.SparkSession
+import org.apache.spark.streaming.kinesis._
 import org.apache.spark.streaming.{Milliseconds, Minutes, Seconds, StreamingContext}
 
 object KinesisExample extends App{
-  def main(args: Array[String]){
+
     val conf = new SparkConf().setAppName("Kinesis Read Data")
     conf.setIfMissing("spark.master", "local[*]")
     val kinesisConf = ConfigFactory.load.getConfig("kinesis")
@@ -38,28 +40,31 @@ object KinesisExample extends App{
     val ssc = new StreamingContext(conf, batchInterval)
 
     val kinesisStreams = (0 until numStreams) . map {
-      i => KinesisUtils.createStream(
-        ssc,
-        appName,
-        streamName,
-        endpointUrl,
-        regionName,
-        InitialPositionInStream.LATEST,
-        kinesisCheckpointInterval,
-        StorageLevel.MEMORY_AND_DISK_2
-      )
+      i => KinesisInputDStream
+        .builder
+        .streamingContext(ssc)
+      .checkpointAppName( appName)
+        .streamName(streamName)
+        .endpointUrl( endpointUrl)
+        .regionName(regionName)
+        .initialPositionInStream(InitialPositionInStream.LATEST)
+        .checkpointInterval( kinesisCheckpointInterval)
+        .storageLevel(StorageLevel.MEMORY_AND_DISK_2)
+        .build
     }
     val unionStreams = ssc.union(kinesisStreams)
     val sensorData = unionStreams.map {
       byteArray =>
       val Array(sensorId, temp, status) = new String(byteArray).split(",")
       SensorData(sensorId, temp.toInt, status)
-      val hotSensors : DStream[SensorData] = sensorData.filter(_.currentTemp > 100)
+    }
+    val hotSensors : DStream[SensorData] = sensorData.filter(_.currentTemp > 100)
       println(s"Sensor with Temp > 100")
-      hotSensors.foreach{ sd =>
-        println(s"Sensor id ${sd.id} has temp of ${sd.currentTemp}")
+      hotSensors.map{ sd =>
       }
-      hotSensors.window(Seconds(20)).foreachRDD { rdd =>
+
+  hotSensors.window(Seconds(20)).foreachRDD {
+    rdd =>
         val spark = SparkSession
           .builder
           .config(rdd.sparkContext.getConf)
@@ -67,14 +72,12 @@ object KinesisExample extends App{
         import spark.implicits._
         val hotSensorDF = rdd.toDF()
         hotSensorDF.createOrReplaceTempView("hot_sensors")
-        hottestOverTime = spark.sql("select * from hot_sensors order by currentTemp desc limit 5")
+        val hottestOverTime = spark.sql("select * from hot_sensors order by currentTemp desc limit 5")
         hottestOverTime.show(2)
       }
       ssc.remember(Minutes(1))
       ssc.start()
-      ssc.awaitTemination()
+      ssc.awaitTermination()
     }
-  }
-}
 
 case class SensorData(id:String, currentTemp:Int, status:String)
