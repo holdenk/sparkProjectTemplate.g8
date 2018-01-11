@@ -33,6 +33,9 @@ lazy val root = (project in file(".")).
     // uses compile classpath for the run task, including "provided" jar (cf http://stackoverflow.com/a/21803413/3827)
     run in Compile := Defaults.runTask(fullClasspath in Compile, mainClass in (Compile, run), runner in (Compile, run)).evaluated,
 
+    scalacOptions ++= Seq("-deprecation", "-unchecked"),
+    pomIncludeRepository := { x => false },
+    
    resolvers ++= Seq(
       "sonatype-releases" at "https://oss.sonatype.org/content/repositories/releases/",
       "Typesafe repository" at "http://repo.typesafe.com/typesafe/releases/",
