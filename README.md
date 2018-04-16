@@ -19,9 +19,6 @@ g8 holdenk/sparkProjectTemplate --name=projectname --organization=com.my.org --s
 Using sbt (0.13.13+) just do
 ```bash
 sbt new holdenk/sparkProjectTemplate.g8
-
-```bash
-sbt new holdenk/sparkProjectTemplate.g8
 ```
 
 ## Executing the created project
