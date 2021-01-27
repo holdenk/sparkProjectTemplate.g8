@@ -5,7 +5,7 @@ lazy val root = (project in file(".")).
   settings(
     inThisBuild(List(
       organization := "$organization$",
-      scalaVersion := "2.11.8"
+      scalaVersion := "2.12.13"
     )),
     name := "$name$",
     version := "$version$",
@@ -25,8 +25,8 @@ lazy val root = (project in file(".")).
       "org.apache.spark" %% "spark-streaming" % "$sparkVersion$" % "provided",
       "org.apache.spark" %% "spark-sql" % "$sparkVersion$" % "provided",
 
-      "org.scalatest" %% "scalatest" % "3.0.1" % "test",
-      "org.scalacheck" %% "scalacheck" % "1.13.4" % "test",
+      "org.scalatest" %% "scalatest" % "3.2.2" % "test",
+      "org.scalacheck" %% "scalacheck" % "1.15.2" % "test",
       "com.holdenkarau" %% "spark-testing-base" % "$sparkVersion$_$sparkTestingbaseRelease$" % "test" 
     ),
 
@@ -38,12 +38,12 @@ lazy val root = (project in file(".")).
     
    resolvers ++= Seq(
       "sonatype-releases" at "https://oss.sonatype.org/content/repositories/releases/",
-      "Typesafe repository" at "http://repo.typesafe.com/typesafe/releases/",
-      "Second Typesafe repo" at "http://repo.typesafe.com/typesafe/maven-releases/",
+      "Typesafe repository" at "https://repo.typesafe.com/typesafe/releases/",
+      "Second Typesafe repo" at "https://repo.typesafe.com/typesafe/maven-releases/",
       Resolver.sonatypeRepo("public")
     ),
 
-    pomIncludeRepository := { x => false },
+    pomIncludeRepository := { _ => false },
 
     // publish settings
     publishTo := {
