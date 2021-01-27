@@ -38,8 +38,8 @@ lazy val root = (project in file(".")).
     
    resolvers ++= Seq(
       "sonatype-releases" at "https://oss.sonatype.org/content/repositories/releases/",
-      "Typesafe repository" at "http://repo.typesafe.com/typesafe/releases/",
-      "Second Typesafe repo" at "http://repo.typesafe.com/typesafe/maven-releases/",
+      "Typesafe repository" at "https://repo.typesafe.com/typesafe/releases/",
+      "Second Typesafe repo" at "https://repo.typesafe.com/typesafe/maven-releases/",
       Resolver.sonatypeRepo("public")
     ),
 
