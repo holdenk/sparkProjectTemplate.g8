@@ -1,5 +1,7 @@
 // give the user a nice default project!
 
+val sparkVersion = settingKey[String]("Spark version")
+
 lazy val root = (project in file(".")).
 
   settings(
@@ -11,7 +13,6 @@ lazy val root = (project in file(".")).
     version := "$version$",
 
     sparkVersion := "$sparkVersion$",
-    sparkComponents := Seq(),
 
     javacOptions ++= Seq("-source", "1.8", "-target", "1.8"),
     javaOptions ++= Seq("-Xms512M", "-Xmx2048M", "-XX:MaxPermSize=2048M", "-XX:+CMSClassUnloadingEnabled"),
@@ -27,7 +28,7 @@ lazy val root = (project in file(".")).
 
       "org.scalatest" %% "scalatest" % "3.2.2" % "test",
       "org.scalacheck" %% "scalacheck" % "1.15.2" % "test",
-      "com.holdenkarau" %% "spark-testing-base" % "$sparkVersion$_$sparkTestingbaseRelease$" % "test" 
+      "com.holdenkarau" %% "spark-testing-base" % "$sparkVersion$_$sparkTestingbaseRelease$" % "test"
     ),
 
     // uses compile classpath for the run task, including "provided" jar (cf http://stackoverflow.com/a/21803413/3827)
@@ -35,7 +36,7 @@ lazy val root = (project in file(".")).
 
     scalacOptions ++= Seq("-deprecation", "-unchecked"),
     pomIncludeRepository := { x => false },
-    
+
    resolvers ++= Seq(
       "sonatype-releases" at "https://oss.sonatype.org/content/repositories/releases/",
       "Typesafe repository" at "https://repo.typesafe.com/typesafe/releases/",
