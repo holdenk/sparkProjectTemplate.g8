@@ -1,0 +1,24 @@
+name: Build and test
+
+on:
+  push:
+    branches:
+    - '**'
+    - '!branch-*.*'
+
+jobs:
+  # Build: build spark-testing-base and run the tests for specified modules.
+  build:
+    runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v1
+    - name: Setup Scala
+      uses: olafurpg/setup-scala@v10
+      with:
+        java-version: "adopt@1.8"
+    # Run the tests.
+    - name: Run tests
+      run: sbt test
